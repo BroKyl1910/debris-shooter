@@ -21,19 +21,35 @@ let gameObjects = [
     gun
 ];
 
+for (let i = 0; i < Math.random() * 10; i++) {
+    const debris = new Debris(canvasConstraints);
+    gameObjects.push(debris);
+}
 
-requestAnimationFrame(draw);
 
-function draw() {
+requestAnimationFrame(gameLoop);
+
+let lastElapsed = 0;
+function gameLoop(elapsed) {
+    let delta = (elapsed - lastElapsed) / 10;
+    lastElapsed = elapsed;
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     ctx.fillStyle = "rgb(51,51,51)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    gameObjects.filter(go => go.gameObjectType=='debris').forEach(d => {
+        if(d.position.y > canvasConstraints.height){
+            gameObjects.splice(gameObjects.indexOf(d), 1);
+            gameObjects.push(new Debris(canvasConstraints));
+        }
+    });
+
     gameObjects.forEach(go => {
-        go.update();
+        go.update(delta);
         go.draw(ctx);
     });
 
-    requestAnimationFrame(draw);
+    requestAnimationFrame(gameLoop);
 }

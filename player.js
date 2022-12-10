@@ -1,5 +1,6 @@
 class Player {
     constructor(canvasConstraints) {
+        this.gameObjectType = "player";
         this.canvasConstraints = canvasConstraints;
         this.radius = 10;
         this.position = {
@@ -8,7 +9,7 @@ class Player {
         }
     }
 
-    update() { }
+    update(delta) { }
 
     draw(ctx) {
         ctx.beginPath();
@@ -20,6 +21,7 @@ class Player {
 
 class Gun {
     constructor(canvasConstraints, position) {
+        this.gameObjectType = "gun";
         this.canvasConstraints = canvasConstraints;
         this.position = position;
         this.direction = 0;
@@ -30,12 +32,12 @@ class Gun {
         this.aim = { x: 0, y: 0 }
     }
 
-    update() {
+    update(delta) {
         // move target
         if (this.target.x >= this.canvasConstraints.width || this.target.x <= 0)
             this.targetDir *= -1;
 
-        this.target.x += 5 * this.targetDir;
+        this.target.x += 3 * this.targetDir * delta;
 
         let dif = {
             x: this.target.x - player.position.x,
@@ -72,5 +74,29 @@ class Gun {
         ctx.strokeStyle = "rgba(255,255,255,0.5)";
         ctx.lineWidth = 10;
         ctx.stroke();
+    }
+}
+
+class Debris {
+    constructor(canvasConstraints) {
+        this.gameObjectType = "debris";
+        this.canvasConstraints = canvasConstraints;
+        this.sideLength = 30;
+        this.position = {
+            x: Math.random() * (canvasConstraints.width - this.sideLength),
+            y: 0
+        }
+        this.fallSpeed = (Math.random() * 0.6 + 0.4) * 3;
+    }
+
+    update(delta) { 
+        this.position.y += this.fallSpeed * delta;
+    }
+
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        ctx.fillRect(this.position.x, this.position.y, this.sideLength, this.sideLength);
+        ctx.fill();
     }
 }
