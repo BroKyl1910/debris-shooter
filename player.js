@@ -30,15 +30,18 @@ class Gun {
         this.target = { x: canvasConstraints.width / 2 + 125, y: canvasConstraints.height / 2 - 30 };
         this.targetDir = 1;
         this.aim = { x: 0, y: 0 }
+
+        document.onmousemove = e => {
+            this.moveTarget(e.clientX, e.clientY);
+        };
+    }
+
+    moveTarget(x, y) {
+        this.target.x = x;
+        this.target.y = y;
     }
 
     update(delta) {
-        // move target
-        if (this.target.x >= this.canvasConstraints.width || this.target.x <= 0)
-            this.targetDir *= -1;
-
-        this.target.x += 3 * this.targetDir * delta;
-
         let dif = {
             x: this.target.x - player.position.x,
             y: this.target.y - player.position.y
@@ -89,7 +92,7 @@ class Debris {
         this.fallSpeed = (Math.random() * 0.6 + 0.4) * 3;
     }
 
-    update(delta) { 
+    update(delta) {
         this.position.y += this.fallSpeed * delta;
     }
 

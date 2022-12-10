@@ -23,7 +23,7 @@ let gameObjects = [
 
 for (let i = 0; i < Math.random() * 10; i++) {
     const debris = new Debris(canvasConstraints);
-    gameObjects.push(debris);
+    gameObjects.unshift(debris);
 }
 
 
