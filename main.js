@@ -14,7 +14,14 @@ canvas.height = canvasConstraints.height;
 const ctx = canvas.getContext("2d");
 
 
-var gameContext = {};
+var gameContext = {
+    delta:0,
+    gameObjects:[],
+    special:{
+        isExplosive:false
+    }
+};
+
 let player = new Player(canvasConstraints);
 let gun = new Gun(canvasConstraints, player.position, gameContext);
 
@@ -37,7 +44,14 @@ requestAnimationFrame(gameLoop);
 
 var paused = false;
 document.onkeydown = e => {
-    paused = !paused;
+    switch (e.code) {
+        case "KeyE":
+            gameContext.special.isExplosive = !gameContext.special.isExplosive;
+            break;
+        default:
+            paused = !paused;
+            break;
+    }
 }
 
 let lastElapsed = 0;
