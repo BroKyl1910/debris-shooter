@@ -23,12 +23,16 @@ let gameObjects = [
     gun
 ];
 
-for (let i = 0; i < Math.random() * 10; i++) {
-    const debris = new Debris(canvasConstraints);
-    gameObjects.unshift(debris);
+
+
+let createDebris = () => {
+    for (let i = 0; i < Math.random() * 10; i++) {
+        const debris = new Debris(canvasConstraints);
+        gameObjects.unshift(debris);
+    }
 }
 
-
+createDebris();
 requestAnimationFrame(gameLoop);
 
 var paused = false;
@@ -42,13 +46,18 @@ function gameLoop(elapsed) {
     lastElapsed = elapsed;
 
     // control falling debris
-    gameObjects.filter(go => go.gameObjectType == 'debris').forEach(d => {
-        if (d.position.y > canvasConstraints.height) {
-            gameObjects.splice(gameObjects.indexOf(d), 1);
-            gameObjects.push(new Debris(canvasConstraints));
-        }
-    });
-
+    let debris = gameObjects.filter(go => go.gameObjectType == 'debris');
+    if (debris.length == 0) {
+        createDebris()
+    }
+    else {
+        debris.forEach(d => {
+            if (d.position.y > canvasConstraints.height) {
+                gameObjects.splice(gameObjects.indexOf(d), 1);
+                gameObjects.push(new Debris(canvasConstraints));
+            }
+        });
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "rgb(51,51,51)";
