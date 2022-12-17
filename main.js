@@ -15,10 +15,11 @@ const ctx = canvas.getContext("2d");
 
 
 var gameContext = {
-    delta:0,
-    gameObjects:[],
-    special:{
-        isExplosive:false
+    delta: 0,
+    gameObjects: [],
+    difficulty: 1,
+    special: {
+        isExplosive: false
     }
 };
 
@@ -33,16 +34,30 @@ let gameObjects = [
 
 
 let createDebris = () => {
-    for (let i = 0; i < Math.random() * 10; i++) {
+    for (let i = 0; i < (Math.random() * 2) + 3; i++) {
         const debris = new Debris(canvasConstraints);
         gameObjects.unshift(debris);
+    }
+}
+
+
+var paused = false;
+let lastElapsed = 0;
+let totalGameTime = 0;
+
+let calculateDifficulty = (delta) => {
+    if (!paused) {
+        totalGameTime += delta / 100;
+        console.log('total time: ' + totalGameTime);
+        let difficulty = Math.ceil(Math.floor(totalGameTime) / 7);
+        console.log('difficulty: ' + difficulty);
+        gameContext.difficulty = difficulty;
     }
 }
 
 createDebris();
 requestAnimationFrame(gameLoop);
 
-var paused = false;
 document.onkeydown = e => {
     switch (e.code) {
         case "KeyE":
@@ -54,10 +69,12 @@ document.onkeydown = e => {
     }
 }
 
-let lastElapsed = 0;
 function gameLoop(elapsed) {
     let delta = (elapsed - lastElapsed) / 10;
     lastElapsed = elapsed;
+    
+    gameContext.delta = delta;
+    gameContext.gameObjects = gameObjects;
 
     // control falling debris
     let debris = gameObjects.filter(go => go.gameObjectType == 'debris');
@@ -77,8 +94,8 @@ function gameLoop(elapsed) {
     ctx.fillStyle = "rgb(51,51,51)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    gameContext.delta = delta;
-    gameContext.gameObjects = gameObjects;
+    calculateDifficulty(delta);
+
 
     gameObjects.forEach(go => {
         if (!paused) {
