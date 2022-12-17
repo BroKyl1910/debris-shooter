@@ -49,9 +49,7 @@ let totalGameTime = 0;
 let calculateDifficulty = (delta) => {
     if (!paused) {
         totalGameTime += delta / 100;
-        console.log('total time: ' + totalGameTime);
         let difficulty = Math.ceil(Math.floor(totalGameTime) / 7);
-        console.log('difficulty: ' + difficulty);
         gameContext.difficulty = difficulty;
     }
 }
@@ -66,6 +64,14 @@ document.onkeydown = e => {
             break;
         case "KeyA":
             gameContext.special.ai = !gameContext.special.ai;
+            if (gameContext.special.ai) {
+                gameContext.gameObjects.push(new AI());
+            }
+            else {
+                let _ai = gameContext.gameObjects.filter(go => go.gameObjectType=='ai')[0];
+                let index = gameContext.gameObjects.indexOf(_ai);
+                gameContext.gameObjects.splice(index, 1);
+            }
             break;
         default:
             paused = !paused;
