@@ -19,7 +19,8 @@ var gameContext = {
     gameObjects: [],
     difficulty: 1,
     special: {
-        isExplosive: false
+        isExplosive: false,
+        ai: false
     }
 };
 
@@ -63,6 +64,9 @@ document.onkeydown = e => {
         case "KeyE":
             gameContext.special.isExplosive = !gameContext.special.isExplosive;
             break;
+        case "KeyA":
+            gameContext.special.ai = !gameContext.special.ai;
+            break;
         default:
             paused = !paused;
             break;
@@ -72,7 +76,7 @@ document.onkeydown = e => {
 function gameLoop(elapsed) {
     let delta = (elapsed - lastElapsed) / 10;
     lastElapsed = elapsed;
-    
+
     gameContext.delta = delta;
     gameContext.gameObjects = gameObjects;
 
