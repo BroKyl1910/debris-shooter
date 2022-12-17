@@ -26,8 +26,8 @@ let player = new Player(canvasConstraints);
 let gun = new Gun(canvasConstraints, player.position, gameContext);
 
 let gameObjects = [
-    player,
-    gun
+    gun,
+    player
 ];
 
 
@@ -86,6 +86,10 @@ function gameLoop(elapsed) {
         }
         go.draw(ctx);
     });
+
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText("E to toggle explosive rounds", 10, canvas.height - 30);
 
     requestAnimationFrame(gameLoop);
 }
